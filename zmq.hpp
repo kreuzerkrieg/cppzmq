@@ -374,8 +374,8 @@ class message_t
 
 	inline void detach(void *data, size_t &size)
     {
-        data = data();
-        size = size();
+        data = zmq_msg_data(&msg);
+        size = zmq_msg_size(const_cast<zmq_msg_t *>(&msg));
         isDetached = true;
     }
 
