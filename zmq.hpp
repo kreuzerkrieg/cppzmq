@@ -379,6 +379,12 @@ class message_t
         isDetached = true;
     }
 
+	inline void *detach()
+    {
+        isDetached = true;
+        return zmq_msg_data(&msg);
+    }
+
     ZMQ_DEPRECATED("from 4.3.0, use operator== instead")
     inline bool equal(const message_t *other) const ZMQ_NOTHROW
     {
