@@ -347,13 +347,6 @@ class message_t
             throw error_t();
     }
 
-    inline void detach(void *data, size_t &size)
-    {
-        data = data();
-        size = size();
-        isDetached = true;
-    }
-
     inline bool more() const ZMQ_NOTHROW
     {
         int rc = zmq_msg_more(const_cast<zmq_msg_t *>(&msg));
@@ -377,6 +370,13 @@ class message_t
     template<typename T> T const *data() const ZMQ_NOTHROW
     {
         return static_cast<T const *>(data());
+    }
+
+	inline void detach(void *data, size_t &size)
+    {
+        data = data();
+        size = size();
+        isDetached = true;
     }
 
     ZMQ_DEPRECATED("from 4.3.0, use operator== instead")
