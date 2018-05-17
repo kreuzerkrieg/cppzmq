@@ -286,8 +286,10 @@ class message_t
 
     inline ~message_t() ZMQ_NOTHROW
     {
-        int rc = zmq_msg_close(&msg);
-        ZMQ_ASSERT(rc == 0);
+        if (!isDetached) {
+            int rc = zmq_msg_close(&msg);
+            ZMQ_ASSERT(rc == 0);
+        }
     }
 
     inline void rebuild()
@@ -343,6 +345,13 @@ class message_t
         int rc = zmq_msg_copy(&msg, const_cast<zmq_msg_t *>(&(msg_->msg)));
         if (rc != 0)
             throw error_t();
+    }
+
+    inline void detach(void *data, size_t &size)
+    {
+        data = data();
+        size = size();
+        isDetached = true;
     }
 
     inline bool more() const ZMQ_NOTHROW
@@ -438,6 +447,7 @@ class message_t
   private:
     //  The underlying message
     zmq_msg_t msg;
+    bool isDetached = false;
 
     //  Disable implicit message copying, so that users won't use shared
     //  messages (less efficient) without being aware of the fact.
